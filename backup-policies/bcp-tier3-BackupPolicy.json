@@ -1,0 +1,52 @@
+{
+  "plans": {
+    "bcp-tier3-default": {
+      "regions": {
+        "@@assign": [
+          "eu-north-1",
+          "ap-south-1",
+          "eu-west-3",
+          "eu-west-2",
+          "eu-west-1",
+          "ap-northeast-3",
+          "ap-northeast-2",
+          "ap-northeast-1",
+          "sa-east-1",
+          "ca-central-1",
+          "ap-southeast-1",
+          "ap-southeast-2",
+          "eu-central-1",
+          "us-east-1",
+          "us-east-2",
+          "us-west-1",
+          "us-west-2"
+        ]
+      },
+      "rules": {
+        "BCP_tier3_Rule": {
+          "schedule_expression": {"@@assign": "cron(0 0 ? * * *)"},
+          "start_backup_window_minutes": {"@@assign": "60"},
+          "complete_backup_window_minutes": {"@@assign": "480"},
+          "lifecycle": {"delete_after_days": {"@@assign": "90"} },
+          "target_backup_vault_name": {"@@assign": "BCPVault-tier3"} }
+      },
+      "backup_plan_tags": {
+        "CreatedBy": {
+          "tag_key": {"@@assign": "CreatedBy"},
+          "tag_value": {"@@assign": "AWS Backup Policy bcp-tier3-default"}
+        }
+      },
+      "selections": {
+        "tags": {
+          "aws_backup_bcp_tier-tier3": {
+            "iam_role_arn": {"@@assign": "arn:aws:iam::$account:role/CentralAWSBackupRole"},
+            "tag_key": {"@@assign": "aws_backup_bcp_tier"},
+            "tag_value": {"@@assign": ["tier3"] } }
+        }
+      },
+      "advanced_backup_settings": {
+        "ec2": {"windows_vss": {"@@assign": "enabled"} }
+      }
+    }
+  }
+}

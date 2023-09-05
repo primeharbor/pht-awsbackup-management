@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ProtectVaults",
+      "Effect": "Deny",
+      "Action": [
+        "backup:CancelLegalHold",
+        "backup:DeleteBackupVault",
+        "backup:DeleteBackupVaultAccessPolicy",
+        "backup:DeleteBackupVaultLockConfiguration",
+        "backup:DeleteRecoveryPoint",
+        "backup:DisassociateRecoveryPoint",
+        "backup:UpdateRecoveryPointLifecycle"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

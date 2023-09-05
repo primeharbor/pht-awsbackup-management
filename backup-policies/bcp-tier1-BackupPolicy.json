@@ -1,0 +1,117 @@
+{
+  "plans": {
+    "bcp-tier1-default": {
+      "regions": {
+        "@@assign": [
+          "eu-north-1",
+          "ap-south-1",
+          "eu-west-3",
+          "eu-west-2",
+          "eu-west-1",
+          "ap-northeast-3",
+          "ap-northeast-2",
+          "ap-northeast-1",
+          "sa-east-1",
+          "ca-central-1",
+          "ap-southeast-1",
+          "ap-southeast-2",
+          "eu-central-1",
+          "us-east-2",
+          "us-west-1",
+          "us-west-2"
+        ]
+      },
+      "rules": {
+        "BCP_Tier1_Rule": {
+          "schedule_expression": {"@@assign": "cron(0 * ? * * *)"},
+          "start_backup_window_minutes": {"@@assign": "60"},
+          "complete_backup_window_minutes": {"@@assign": "480"},
+          "lifecycle": {"delete_after_days": {"@@assign": "180"} },
+          "target_backup_vault_name": {"@@assign": "BCPVault-tier1"},
+          "recovery_point_tags": {
+            "cost-center": {
+              "tag_key": {"@@assign": "cost-center"},
+              "tag_value": {"@@assign": "bcp-tier1-default"}
+            }
+          },
+          "copy_actions": {
+            "arn:aws:backup:us-east-1:$account:backup-vault:BCPVault-CrossRegional-us-east-1": {
+              "target_backup_vault_arn": {
+                "@@assign": "arn:aws:backup:us-east-1:$account:backup-vault:BCPVault-CrossRegional-us-east-1"
+              },
+              "lifecycle": {
+                "delete_after_days": {"@@assign": "180"}
+              }
+            }
+          }
+        }
+      },
+      "backup_plan_tags": {
+        "CreatedBy": {
+          "tag_key": {"@@assign": "CreatedBy"},
+          "tag_value": {"@@assign": "AWS Backup Policy bcp-tier1-default"}
+        }
+      },
+      "selections": {
+        "tags": {
+          "aws_backup_bcp_tier-tier1": {
+            "iam_role_arn": {"@@assign": "arn:aws:iam::$account:role/CentralAWSBackupRole"},
+            "tag_key": {"@@assign": "aws_backup_bcp_tier"},
+            "tag_value": {"@@assign": ["tier1"] }
+          }
+        }
+      },
+      "advanced_backup_settings": {
+        "ec2": {"windows_vss": {"@@assign": "enabled"} }
+      }
+    },
+    "bcp-tier1-us-east-1": {
+      "regions": {
+        "@@assign": ["us-east-1"]
+      },
+      "rules": {
+        "BCP_Tier1_Rule": {
+          "schedule_expression": {"@@assign": "cron(0 * ? * * *)"},
+          "start_backup_window_minutes": {"@@assign": "60"},
+          "complete_backup_window_minutes": {"@@assign": "480"},
+          "lifecycle": {"delete_after_days": {"@@assign": "180"}
+          },
+          "target_backup_vault_name": {"@@assign": "BCPVault-tier1"},
+          "recovery_point_tags": {
+            "cost-center": {
+              "tag_key": {"@@assign": "cost-center"},
+              "tag_value": {"@@assign": "bcp-tier1-us-east-1"}
+            }
+          },
+          "copy_actions": {
+            "arn:aws:backup:us-west-2:$account:backup-vault:BCPVault-CrossRegional-us-west-2": {
+              "target_backup_vault_arn": {
+                "@@assign": "arn:aws:backup:us-west-2:$account:backup-vault:BCPVault-CrossRegional-us-west-2"
+              },
+              "lifecycle": {
+                "delete_after_days": {"@@assign": "180"}
+              }
+            }
+          }
+        }
+      },
+      "backup_plan_tags": {
+        "CreatedBy": {
+          "tag_key": {"@@assign": "CreatedBy"},
+          "tag_value": {"@@assign": "AWS Backup Policy bcp-tier1-us-east-1"}
+        }
+      },
+      "selections": {
+        "tags": {
+          "aws_backup_bcp_tier-tier1": {
+            "iam_role_arn": {"@@assign": "arn:aws:iam::$account:role/CentralAWSBackupRole"},
+            "tag_key": {"@@assign": "aws_backup_bcp_tier"},
+            "tag_value": {"@@assign": ["tier1"] } }
+        }
+      },
+      "advanced_backup_settings": {
+        "ec2": {"windows_vss": {"@@assign": "enabled"} }
+      }
+    }
+  }
+}
